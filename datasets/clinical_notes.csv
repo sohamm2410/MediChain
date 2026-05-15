@@ -1,0 +1,101 @@
+note,disease
+"Patient reports chest pain and shortness of breath",cardiac
+"Severe fatigue and irregular heartbeat observed",cardiac
+"Rapid heartbeat and dizziness during exercise",cardiac
+"Chest discomfort and pressure sensation",cardiac
+"Pain radiating to left arm and sweating",cardiac
+"Palpitations and mild chest tightness",cardiac
+"Elevated blood pressure and headache",cardiac
+"Swelling in legs with breathing difficulty",cardiac
+"Persistent chest heaviness after walking",cardiac
+"Abnormal ECG and chest discomfort",cardiac
+"Muscle weakness and swallowing difficulty",neurological
+"Persistent tremors and balance problems",neurological
+"Memory loss and confusion episodes",neurological
+"Frequent migraines and blurred vision",neurological
+"Numbness in hands and legs",neurological
+"Difficulty speaking and facial weakness",neurological
+"Loss of coordination and dizziness",neurological
+"Muscle stiffness and slow movements",neurological
+"Severe headaches with nausea",neurological
+"Difficulty concentrating and seizures",neurological
+"Fever with continuous cough and sore throat",respiratory
+"Difficulty breathing and chest congestion",respiratory
+"Shortness of breath and wheezing symptoms",respiratory
+"Persistent dry cough and fatigue",respiratory
+"Chest infection with mucus buildup",respiratory
+"Low oxygen levels and breathing issues",respiratory
+"Persistent asthma attacks and coughing",respiratory
+"Pain while breathing and mild fever",respiratory
+"Runny nose with persistent sneezing",respiratory
+"Inflamed lungs and severe cough",respiratory
+"Frequent urination and elevated glucose levels",diabetes
+"Blurred vision and excessive thirst reported",diabetes
+"High blood sugar and sudden fatigue",diabetes
+"Slow wound healing and dizziness",diabetes
+"Increased hunger and frequent urination",diabetes
+"Tingling sensation in feet and hands",diabetes
+"Elevated glucose after meals",diabetes
+"Sudden weight loss with high sugar levels",diabetes
+"Persistent fatigue and dry mouth",diabetes
+"Excessive thirst and blurry eyesight",diabetes
+"Joint pain and skin rashes present",autoimmune
+"Inflammation and severe stiffness in joints",autoimmune
+"Joint swelling and chronic inflammation",autoimmune
+"Persistent fatigue with body pain",autoimmune
+"Skin redness and painful joints",autoimmune
+"Dry eyes and mouth irritation",autoimmune
+"Swollen fingers and muscle pain",autoimmune
+"Immune system flare causing fever",autoimmune
+"Chronic inflammation with weakness",autoimmune
+"Painful joints and skin sensitivity",autoimmune
+"Abdominal pain and nausea after meals",gastrointestinal
+"Chronic diarrhea and weight loss observed",gastrointestinal
+"Severe stomach cramps and bloating",gastrointestinal
+"Vomiting and abdominal discomfort",gastrointestinal
+"Acid reflux and chest burning sensation",gastrointestinal
+"Constipation with severe stomach pain",gastrointestinal
+"Frequent indigestion and nausea",gastrointestinal
+"Loss of appetite with abdominal swelling",gastrointestinal
+"Persistent bloating after eating",gastrointestinal
+"Sharp abdominal pain and vomiting",gastrointestinal
+"High fever with body aches",infectious
+"Persistent cough with blood traces",infectious
+"Severe sore throat and swollen glands",infectious
+"Recurring fever and weakness",infectious
+"Night sweats and chronic cough",infectious
+"Skin infection with redness and swelling",infectious
+"Viral fever with dehydration",infectious
+"Severe chills and muscle pain",infectious
+"Fatigue and prolonged fever",infectious
+"Inflamed lymph nodes and fever",infectious
+"Persistent sadness and loss of interest",mental_health
+"Anxiety attacks and rapid breathing",mental_health
+"Difficulty sleeping and mood swings",mental_health
+"Low motivation and fatigue",mental_health
+"Excessive worrying and panic episodes",mental_health
+"Social withdrawal and hopelessness",mental_health
+"Stress causing headaches and insomnia",mental_health
+"Mood instability and irritability",mental_health
+"Loss of concentration and anxiety",mental_health
+"Depressed mood and appetite changes",mental_health
+"Frequent urination with burning sensation",urinary
+"Lower abdominal pain and discomfort",urinary
+"Blood in urine and fever",urinary
+"Kidney pain and nausea",urinary
+"Difficulty urinating and pelvic pain",urinary
+"Cloudy urine with foul smell",urinary
+"Pain during urination and chills",urinary
+"Urinary urgency and back pain",urinary
+"Frequent nighttime urination",urinary
+"Bladder pressure and discomfort",urinary
+"Skin itching and red patches",dermatological
+"Severe acne and oily skin",dermatological
+"Dry skin with irritation",dermatological
+"Rashes spreading across arms",dermatological
+"Skin peeling and redness",dermatological
+"Painful blisters and itching",dermatological
+"Inflamed skin with burning sensation",dermatological
+"Dark skin spots and irritation",dermatological
+"Scalp itching and hair loss",dermatological
+"Persistent eczema and redness",dermatological
