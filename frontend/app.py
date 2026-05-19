@@ -1,23 +1,13 @@
 import streamlit as st
 import pandas as pd
-import sys
-import os
-
-# Add parent directory to path
-sys.path.append(
-    os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..")
-    )
-)
-
-from models.utils import predict_disease
+import requests
 
 # ---------------- PAGE CONFIG ----------------
 
 st.set_page_config(
     page_title="MediChain",
     page_icon="🩺",
-    layout="centered"
+    layout="wide"
 )
 
 # ---------------- SESSION STATE ----------------
@@ -27,55 +17,30 @@ if "history" not in st.session_state:
 
 # ---------------- SIDEBAR ----------------
 
-st.sidebar.title("About")
+st.sidebar.title("🩺 MediChain")
+
+st.sidebar.markdown("## About")
 
 st.sidebar.info("""
 MediChain is a privacy-preserving healthcare AI platform
-designed for rare disease detection using NLP,
-Federated Learning, and Differential Privacy.
+designed for rare disease detection using:
+- NLP
+- Machine Learning
+- Federated Learning
+- Differential Privacy
 """)
 
 st.sidebar.markdown("---")
 
 st.sidebar.subheader("System Status")
 
-st.sidebar.success("Model Active")
-st.sidebar.success("Federated Server Simulated")
-st.sidebar.success("Privacy Layer Ready")
+st.sidebar.success("ML Model Active")
+st.sidebar.success("Backend API Connected")
+st.sidebar.success("Federated Simulation Ready")
 
-# ---------------- MAIN TITLE ----------------
+st.sidebar.markdown("---")
 
-st.title("🩺 MediChain")
-
-st.subheader("Privacy-Preserving Healthcare AI Platform")
-
-# ---------------- METRICS ----------------
-
-col1, col2, col3 = st.columns(3)
-
-col1.metric("Models Loaded", "1")
-col2.metric("Hospitals Connected", "3")
-col3.metric("Predictions Today", len(st.session_state.history))
-
-# ---------------- ABOUT SECTION ----------------
-
-with st.expander("About MediChain"):
-
-    st.write("""
-    MediChain is an AI-powered healthcare platform designed
-    for clinical note analysis and disease prediction using
-    Natural Language Processing (NLP).
-
-    Future versions will include:
-    - Federated Learning
-    - Differential Privacy
-    - BioBERT Integration
-    - Multi-Hospital AI Training
-    """)
-
-# ---------------- HOSPITAL SELECTOR ----------------
-
-hospital = st.selectbox(
+hospital = st.sidebar.selectbox(
     "Select Hospital",
     [
         "Hospital A",
@@ -84,17 +49,63 @@ hospital = st.selectbox(
     ]
 )
 
-# ---------------- DESCRIPTION ----------------
+# ---------------- TITLE ----------------
 
-st.write("""
-Analyze clinical notes using Machine Learning and NLP.
-""")
+st.title("🩺 MediChain")
 
-# ---------------- TEXT INPUT ----------------
+st.subheader(
+    "Privacy-Preserving Healthcare AI Platform"
+)
+
+# ---------------- METRICS ----------------
+
+col1, col2, col3 = st.columns(3)
+
+col1.metric(
+    "Hospitals Connected",
+    "3"
+)
+
+col2.metric(
+    "Models Running",
+    "1"
+)
+
+col3.metric(
+    "Predictions Made",
+    len(st.session_state.history)
+)
+
+# ---------------- ABOUT EXPANDER ----------------
+
+with st.expander("About MediChain"):
+
+    st.write("""
+    MediChain is an AI-powered healthcare platform
+    for clinical note analysis and disease prediction.
+
+    Current Features:
+    - NLP-based disease prediction
+    - Confidence score analysis
+    - Healthcare analytics dashboard
+    - FastAPI backend integration
+
+    Upcoming Features:
+    - Federated Learning
+    - Differential Privacy
+    - BioBERT Integration
+    """)
+
+# ---------------- INPUT SECTION ----------------
+
+st.markdown("---")
+
+st.subheader("Clinical Note Analysis")
 
 clinical_note = st.text_area(
     "Enter Clinical Note",
-    height=150
+    placeholder="Example: Patient reports chest pain and shortness of breath...",
+    height=180
 )
 
 # ---------------- PREDICTION BUTTON ----------------
@@ -107,34 +118,64 @@ if st.button("Predict Disease"):
 
     else:
 
-        prediction, confidence = predict_disease(clinical_note)
+        try:
 
-        # Save prediction history
-        st.session_state.history.append({
+            response = requests.post(
 
-            "Hospital": hospital,
-            "Clinical Note": clinical_note,
-            "Prediction": prediction,
-            "Confidence": round(confidence, 2)
+                "http://127.0.0.1:8000/predict",
 
-        })
+                json={
+                    "note": clinical_note
+                }
 
-        st.success("Prediction Complete")
+            )
 
-        st.markdown("## Prediction Result")
+            result = response.json()
 
-        st.write(
-            f"### Predicted Disease Category: `{prediction}`"
-        )
+            prediction = result["prediction"]
+            confidence = result["confidence"]
 
-        st.write(
-            f"### Confidence Score: `{confidence:.2f}%`"
-        )
+            # Save prediction history
+            st.session_state.history.append({
 
-        # Progress Bar
-        st.progress(min(int(confidence), 100))
+                "Hospital": hospital,
+                "Clinical Note": clinical_note,
+                "Prediction": prediction,
+                "Confidence": confidence
 
-# ---------------- PREDICTION HISTORY ----------------
+            })
+
+            # ---------------- RESULT SECTION ----------------
+
+            st.success("Prediction Completed Successfully")
+
+            st.markdown("---")
+
+            st.subheader("Prediction Result")
+
+            result_col1, result_col2 = st.columns(2)
+
+            with result_col1:
+
+                st.info(
+                    f"Predicted Disease: {prediction}"
+                )
+
+            with result_col2:
+
+                st.info(
+                    f"Confidence Score: {confidence:.2f}%"
+                )
+
+            st.progress(min(int(confidence), 100))
+
+        except Exception as e:
+
+            st.error("Backend API connection failed.")
+
+            st.code(str(e))
+
+# ---------------- HISTORY SECTION ----------------
 
 if len(st.session_state.history) > 0:
 
@@ -151,7 +192,7 @@ if len(st.session_state.history) > 0:
         use_container_width=True
     )
 
-# ---------------- ANALYTICS ----------------
+# ---------------- ANALYTICS SECTION ----------------
 
 if len(st.session_state.history) > 0:
 
@@ -169,11 +210,14 @@ if len(st.session_state.history) > 0:
 
     st.bar_chart(disease_counts)
 
-# ---------------- CLEAR HISTORY ----------------
+# ---------------- CLEAR BUTTON ----------------
+
+st.markdown("---")
 
 if st.button("Clear Prediction History"):
 
     st.session_state.history = []
 
-    st.success("History Cleared")
+    st.success("Prediction history cleared.")
 
+# ---------------- FOOTER ----------------
