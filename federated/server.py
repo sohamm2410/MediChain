@@ -1,14 +1,25 @@
-from flwr.server import start_server, ServerConfig
+import flwr as fl
 
-# Start Flower Federated Learning Server
-start_server(
+print("\nStarting MediChain Federated Server...\n")
 
-    server_address="127.0.0.1:9090",
+# Configure federated strategy
+strategy = fl.server.strategy.FedAvg(
 
-    config=ServerConfig(
-        num_rounds=3
-    )
+    min_fit_clients=3,
+    min_available_clients=3,
+    min_evaluate_clients=3
 
 )
 
+# Start Flower server
+fl.server.start_server(
 
+    server_address="0.0.0.0:8080",
+
+    config=fl.server.ServerConfig(
+        num_rounds=3
+    ),
+
+    strategy=strategy
+
+)
