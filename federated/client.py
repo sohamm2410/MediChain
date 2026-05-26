@@ -1,6 +1,8 @@
 import flwr as fl
 import numpy as np
 import pandas as pd
+import random
+import csv
 
 # ---------------- HOSPITAL INPUT ----------------
 
@@ -29,24 +31,32 @@ else:
     print("Invalid hospital selected.")
     exit()
 
-# Load dataset
+# ---------------- LOAD DATASET ----------------
+
 df = pd.read_csv(dataset_path)
 
 print(f"\nLoaded Dataset for Hospital {hospital_name}")
+
 print(df.head())
 
-# ---------------- DUMMY MODEL PARAMETERS ----------------
+# ---------------- INITIAL MODEL WEIGHTS ----------------
 
-weights = [np.array([1.0, 2.0, 3.0])]
+weights = [
+
+    np.array([1.0, 2.0, 3.0])
+
+]
 
 # ---------------- FEDERATED CLIENT ----------------
 
 class HospitalClient(fl.client.NumPyClient):
 
+    # Send model parameters to server
     def get_parameters(self, config):
 
         return weights
 
+    # Local training
     def fit(self, parameters, config):
 
         print(
@@ -71,14 +81,68 @@ class HospitalClient(fl.client.NumPyClient):
 
         return updated_weights, len(df), {}
 
+    # Evaluation
     def evaluate(self, parameters, config):
 
-        loss = 0.1
+        # Simulated metrics
+        loss = round(
 
-        accuracy = 0.90
+            random.uniform(0.05, 0.20),
+
+            3
+
+        )
+
+        accuracy = round(
+
+            random.uniform(0.80, 0.98),
+
+            3
+
+        )
+
+        current_round = config.get(
+            "server_round",
+            1
+        )
+
+        # Save metrics to CSV
+        with open(
+
+            "federated/metrics/training_metrics.csv",
+
+            mode="a",
+
+            newline=""
+
+        ) as file:
+
+            writer = csv.writer(file)
+
+            writer.writerow([
+
+                current_round,
+
+                hospital_name,
+
+                accuracy,
+
+                loss
+
+            ])
+
+        print(
+            f"\nHospital {hospital_name} Evaluation"
+        )
+
+        print(f"Accuracy: {accuracy}")
+
+        print(f"Loss: {loss}")
 
         return loss, len(df), {
+
             "accuracy": accuracy
+
         }
 
 # ---------------- START CLIENT ----------------
