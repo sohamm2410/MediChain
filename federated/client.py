@@ -1,14 +1,37 @@
+import sys
+import os
+
+# Add project root to Python path
+sys.path.append(
+    os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            ".."
+        )
+    )
+)
+
 import flwr as fl
 import numpy as np
 import pandas as pd
 import random
 import csv
 
+from privacy.dp_utils import add_dp_noise
+
 # ---------------- HOSPITAL INPUT ----------------
 
 hospital_name = input(
     "Enter Hospital Name (A/B/C): "
 ).strip().upper()
+
+# ---------------- PRIVACY BUDGET ----------------
+
+privacy_budget = 0.5
+
+print(
+    f"\nPrivacy Budget (ε): {privacy_budget}"
+)
 
 # ---------------- LOAD HOSPITAL DATA ----------------
 
@@ -29,13 +52,16 @@ elif hospital_name == "C":
 else:
 
     print("Invalid hospital selected.")
+
     exit()
 
 # ---------------- LOAD DATASET ----------------
 
 df = pd.read_csv(dataset_path)
 
-print(f"\nLoaded Dataset for Hospital {hospital_name}")
+print(
+    f"\nLoaded Dataset for Hospital {hospital_name}"
+)
 
 print(df.head())
 
@@ -51,12 +77,13 @@ weights = [
 
 class HospitalClient(fl.client.NumPyClient):
 
-    # Send model parameters to server
+    # Send parameters to server
     def get_parameters(self, config):
 
         return weights
 
-    # Local training
+    # ---------------- LOCAL TRAINING ----------------
+
     def fit(self, parameters, config):
 
         print(
@@ -67,21 +94,42 @@ class HospitalClient(fl.client.NumPyClient):
             f"Number of patient records: {len(df)}"
         )
 
-        # Simulated local training
+        # ---------------- SIMULATED LOCAL TRAINING ----------------
+
         updated_weights = [
 
             param + np.random.randn(*param.shape) * 0.1
 
             for param in parameters
+
         ]
+
+        # ---------------- DIFFERENTIAL PRIVACY ----------------
+
+        private_weights = add_dp_noise(
+
+            updated_weights,
+
+            noise_scale=0.05
+
+        )
+
+        print(
+            f"Differential Privacy applied at Hospital {hospital_name}"
+        )
+
+        print(
+            f"Noise Scale Applied: 0.05"
+        )
 
         print(
             f"Hospital {hospital_name} completed local training."
         )
 
-        return updated_weights, len(df), {}
+        return private_weights, len(df), {}
 
-    # Evaluation
+    # ---------------- EVALUATION ----------------
+
     def evaluate(self, parameters, config):
 
         # Simulated metrics
@@ -102,11 +150,15 @@ class HospitalClient(fl.client.NumPyClient):
         )
 
         current_round = config.get(
+
             "server_round",
+
             1
+
         )
 
-        # Save metrics to CSV
+        # ---------------- SAVE METRICS ----------------
+
         with open(
 
             "federated/metrics/training_metrics.csv",
@@ -135,9 +187,13 @@ class HospitalClient(fl.client.NumPyClient):
             f"\nHospital {hospital_name} Evaluation"
         )
 
-        print(f"Accuracy: {accuracy}")
+        print(
+            f"Accuracy: {accuracy}"
+        )
 
-        print(f"Loss: {loss}")
+        print(
+            f"Loss: {loss}"
+        )
 
         return loss, len(df), {
 
