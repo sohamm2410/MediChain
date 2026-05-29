@@ -1,10 +1,10 @@
 streamlit
-fastapi
-uvicorn
 pandas
 numpy
 scikit-learn
-torch
-transformers
+plotly
+requests
+fastapi
+uvicorn
+matplotlib
 flwr
-opacus
