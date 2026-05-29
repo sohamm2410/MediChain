@@ -1,5 +1,4 @@
 import streamlit as st
-import requests
 import pandas as pd
 import plotly.express as px
 from datetime import datetime
@@ -17,6 +16,7 @@ sys.path.append(
     )
 )
 
+from models.utils import predict_disease
 from models.entity_extractor import extract_symptoms
 from models.clinical_reasoning import generate_observation
 
@@ -63,22 +63,13 @@ st.subheader(
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.metric(
-        "Active Hospitals",
-        "3"
-    )
+    st.metric("Active Hospitals", "3")
 
 with col2:
-    st.metric(
-        "Privacy Status",
-        "Enabled"
-    )
+    st.metric("Privacy Status", "Enabled")
 
 with col3:
-    st.metric(
-        "Privacy Budget (ε)",
-        "0.5"
-    )
+    st.metric("Privacy Budget (ε)", "0.5")
 
 st.divider()
 
@@ -99,28 +90,17 @@ predict_button = st.button(
 if predict_button:
 
     if clinical_note.strip() == "":
-
-        st.error(
-            "Please enter a clinical note."
-        )
+        st.error("Please enter a clinical note.")
 
     else:
 
         try:
 
-            response = requests.post(
-                "http://127.0.0.1:8000/predict",
-                json={
-                    "note": clinical_note
-                }
+            prediction, confidence = predict_disease(
+                clinical_note
             )
 
-            result = response.json()
-
-            prediction = result["prediction"]
-            confidence = result["confidence"]
-
-            # ---------------- PREDICTION RESULT ----------------
+            # ---------------- RESULT ----------------
 
             st.subheader(
                 "Prediction Result"
@@ -141,7 +121,7 @@ if predict_button:
                 )
             )
 
-            # ---------------- SYMPTOM EXTRACTION ----------------
+            # ---------------- SYMPTOMS ----------------
 
             symptoms = extract_symptoms(
                 clinical_note
@@ -154,16 +134,14 @@ if predict_button:
             if symptoms:
 
                 for symptom in symptoms:
-
                     st.success(symptom)
 
             else:
-
                 st.info(
                     "No symptoms detected."
                 )
 
-            # ---------------- AI OBSERVATION ----------------
+            # ---------------- OBSERVATION ----------------
 
             observation = generate_observation(
                 symptoms
@@ -186,14 +164,17 @@ if predict_button:
                     )[:19],
                     "Hospital": hospital,
                     "Prediction": prediction,
-                    "Confidence": confidence
+                    "Confidence": round(
+                        confidence,
+                        2
+                    )
                 }
             )
 
         except Exception as e:
 
             st.error(
-                f"Backend Error: {str(e)}"
+                f"Prediction Error: {str(e)}"
             )
 
 # ---------------- HISTORY ----------------
