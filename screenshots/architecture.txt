@@ -1,0 +1,13 @@
+Hospital A
+     |
+Hospital B
+     |
+Hospital C
+     |
+Federated Server
+     |
+Global Model
+     |
+FastAPI
+     |
+Streamlit Dashboard
